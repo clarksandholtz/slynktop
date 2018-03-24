@@ -43,6 +43,7 @@ export default class Landing extends Component {
           .signInWithCredential(credential)
           .then(user => {
             console.table(user)
+            this.props.toggleAuth()
           })
           .catch(error => console.error(error))
       })
@@ -53,7 +54,7 @@ export default class Landing extends Component {
     return (
       <Container>
         <LogoContainer />
-        <AuthButton to="/messages">
+        <AuthButton onClick={this.props.toggleAuth}>
           <ButtonText>Sign in with Google</ButtonText>
         </AuthButton>
       </Container>
@@ -80,7 +81,7 @@ const LogoContainer = styled.div`
   align-items: center;
 `
 
-const AuthButton = styled(Link)`
+const AuthButton = styled.div`
   grid-area: button;
   padding: 8px 16px;
   border-radius: 32px;

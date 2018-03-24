@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
-import { Route, withRouter } from 'react-router'
+import { Route, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
-import ConversationsList from '../components/conversations-list'
+import ConversationsList from './conversations-list'
+import Conversation from './conversation'
 
 class MessagesPage extends Component {
   constructor(props) {
     super(props)
+
+    console.log('constructiong')
 
     this.state = {
       conversations: [
@@ -48,18 +51,19 @@ class MessagesPage extends Component {
   }
 
   render() {
+    console.log('rendering')
+
     const { match } = this.props
     const { conversations } = this.state
-    const activeConversation = conversations.find(convo => {
-      console.log(match)
-      return match.path.includes(convo.id)
-    })
+    // const activeConversation = conversations.find(convo => {
+    //   return convo.id == match.params.id
+    // })
+    // console.log('CONVO', activeConversation)
     return (
-      <Route path="/messages">
-        <MessagesPageContainer>
-          <ConversationsList conversations={conversations} />
-        </MessagesPageContainer>
-      </Route>
+      <MessagesPageContainer>
+        <ConversationsList conversations={conversations} />
+        {/* <Conversation convo={activeConversation} /> */}
+      </MessagesPageContainer>
     )
   }
 }

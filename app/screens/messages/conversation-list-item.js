@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
+import { darken } from 'polished'
 
 class ConversationListItem extends Component {
   render() {
@@ -8,16 +9,16 @@ class ConversationListItem extends Component {
     const { messages } = convo
     const msg = messages[0]
     return (
-      <ConvoListItem key={convo.contact.name}>
+      <ConvoListItem key={convo.contact.name} to={`/messages/${convo.id}`}>
         <ContactName>{convo.contact.name}</ContactName>
         <TimeStamp>{msg.timestamp}</TimeStamp>
-        <MessagePreview>{msg.content}</MessagePreview>
+        <MessagePreview unread={msg.read}>{msg.content}</MessagePreview>
       </ConvoListItem>
     )
   }
 }
 
-const ConvoListItem = styled.div`
+const ConvoListItem = styled(Link)`
   width: 100%;
   height: 100px;
   border-bottom-width: 1px;
@@ -28,6 +29,11 @@ const ConvoListItem = styled.div`
   grid-template-columns: 1fr auto;
   grid-template-rows: auto 1fr;
   grid-template-areas: 'name status' 'msg time';
+  background-color: ${({ theme }) => theme.light};
+
+  &:hover {
+    background-color: ${({ theme }) => darken(0.1, theme.light)};
+  }
 `
 
 const ContactName = styled.div`
@@ -40,7 +46,7 @@ const MessagePreview = styled.div`
   grid-area: msg;
   font-size: 16px;
   font-weight: 300;
-  color: ${({ theme }) => theme.medium};
+  color: ${({ theme, unread }) => (unread ? theme.dark : theme.medium)};
 `
 const TimeStamp = styled.div`
   grid-area: time;
