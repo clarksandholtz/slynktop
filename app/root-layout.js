@@ -13,9 +13,7 @@ export default class RootLayout extends Component {
       <GridContainer>
         <NavBar />
         <PageContainer>
-          <Route path="/messages/:conversationId">
-            <MessagesPage />
-          </Route>
+          <Route path="/messages" component={MessagesPage} />
           {/* <NotificationsPage />
           <FilesPage />
           <SettingsPage /> */}

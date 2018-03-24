@@ -51,18 +51,13 @@ class MessagesPage extends Component {
   }
 
   render() {
-    console.log('rendering')
-
     const { match } = this.props
     const { conversations } = this.state
-    // const activeConversation = conversations.find(convo => {
-    //   return convo.id == match.params.id
-    // })
-    // console.log('CONVO', activeConversation)
+    const activeConversation = conversations
     return (
       <MessagesPageContainer>
         <ConversationsList conversations={conversations} />
-        {/* <Conversation convo={activeConversation} /> */}
+        <Conversation convo={activeConversation} />
       </MessagesPageContainer>
     )
   }

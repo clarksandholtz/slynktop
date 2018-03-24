@@ -9,8 +9,8 @@ class Conversation extends Component {
     const { convo } = this.props
     return (
       <Container>
-        <MessageBar />
         <Thread convo={convo} />
+        <MessageBar />
       </Container>
     )
   }

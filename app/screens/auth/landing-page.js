@@ -11,6 +11,8 @@ export default class Landing extends Component {
 
     this.state = {
       authenticated: false,
+      googleId: '',
+      email: '',
     }
   }
 
