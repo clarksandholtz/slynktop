@@ -44,7 +44,6 @@ export default class Landing extends Component {
           .auth()
           .signInWithCredential(credential)
           .then(user => {
-            console.table(user)
             this.props.toggleAuth()
           })
           .catch(error => console.error(error))

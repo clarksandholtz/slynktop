@@ -11,5 +11,6 @@ const MessageBarContainer = styled.div`
   grid-area: message-bar;
   background-color: ${({ theme }) => theme.dark};
   width: 100%;
-  padding: 16;
+  padding: 16px;
+  height: 32px;
 `

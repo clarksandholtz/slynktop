@@ -5,7 +5,7 @@ export default class Message extends Component {
   render() {
     const { message: { content, timestamp, inbound } } = this.props
     return (
-      <Wrapper>
+      <Wrapper inbound={inbound}>
         <Bubble inbound={inbound}>
           <MessageText>{content}</MessageText>
         </Bubble>
@@ -19,7 +19,6 @@ const Wrapper = styled.div`
   align-self: ${({ inbound }) => (inbound ? 'flex-start' : 'flex-end')};
   display: flex;
   flex-direction: column;
-  align-items: ${({ inbound }) => (inbound ? 'flex-start' : 'flex-end')};
 `
 
 const Bubble = styled.div`

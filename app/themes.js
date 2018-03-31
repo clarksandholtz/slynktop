@@ -4,7 +4,7 @@ const themes = {
   default: {
     primary: '#73ba9b',
     dark: '#4A4A4A',
-    medium: '#C4C4C4',
+    medium: 'rgb(196,196,196)',
     light: '#FFFFFF',
   },
   'Purple Sunrise': {

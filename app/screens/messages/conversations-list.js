@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import ConversationsListItem from './conversation-list-item'
+import ConversationListhHeader from './conversations-list-header'
 
 class ConversationsList extends Component {
   renderConversations = () => {
@@ -12,7 +13,12 @@ class ConversationsList extends Component {
   }
 
   render() {
-    return <ListContainer>{this.renderConversations()}</ListContainer>
+    return (
+      <ListContainer>
+        <ConversationListhHeader />
+        {this.renderConversations()}
+      </ListContainer>
+    )
   }
 }
 
@@ -21,6 +27,8 @@ const ListContainer = styled.div`
   overflow-y: scroll;
   background-color: ${({ theme }) => theme.light};
   grid-area: master;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  z-index: 1;
 `
 
 export default withRouter(ConversationsList)

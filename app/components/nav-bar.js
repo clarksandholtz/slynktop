@@ -39,6 +39,7 @@ export default class NavBar extends Component {
 }
 
 const NavContainer = styled.div`
+  -webkit-app-region: drag;
   padding: 22px 0 0 0;
   background-color: ${({ theme }) => theme.dark};
   display: flex;
