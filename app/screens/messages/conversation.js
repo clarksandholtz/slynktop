@@ -20,20 +20,20 @@ class Conversation extends Component {
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    'header'
-    'thread'
-    'message-bar';
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
 `
 
 const ConversationHeader = styled.div`
-  grid-area: header;
   width: 100%;
   text-align: center;
   color: ${({ theme }) => theme.primary};
+  background-color: rgba(0, 0, 0, 0);
   padding: 8px 0;
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  flex-grow: 0;
 `
 
 export default withRouter(Conversation)

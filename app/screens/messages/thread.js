@@ -7,7 +7,15 @@ class Thread extends Component {
   renderMessages = () => {
     const { convo: { messages } } = this.props
     if (!messages) return null
-    return messages.map(msg => <Message message={msg} />)
+    return messages.map((msg, index) => (
+      <Message
+        message={msg}
+        isLast={
+          index === messages.length - 1 ||
+          msg.inbound !== messages[index + 1].inbound
+        }
+      />
+    ))
   }
 
   render() {
@@ -16,15 +24,14 @@ class Thread extends Component {
 }
 
 const ThreadContainer = styled.div`
-  grid-area: thread;
   width: 100%;
-  height: 300px;
   background-color: ${({ theme }) => theme.light};
-  overflow-y: scroll;
+  overflow-y: auto;
   display: flex;
-  justify-content: flex-start;
   flex-direction: column;
-  padding: 16px 16px 0 16px;
+  padding: 0 24px;
+  flex-shrink: 1;
+  flex-grow: 1;
 `
 
 export default withRouter(Thread)

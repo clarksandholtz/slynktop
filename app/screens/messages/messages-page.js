@@ -3,7 +3,6 @@ import { Route, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import ConversationsList from './conversations-list'
 import Conversation from './conversation'
-import ConversationsListHeader from './conversations-list-header'
 import conversations from './conversation-data'
 
 class MessagesPage extends Component {
