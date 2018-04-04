@@ -1,11 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import styled from 'styled-components'
 import * as firebase from 'firebase'
 import { OAuth2Provider } from 'electron-oauth-helper'
 import querystring from 'querystring'
 import { Link } from 'react-router-dom'
+import { graphql, withApollo } from 'react-apollo'
+import { compose } from 'react-apollo'
+import gql from 'graphql-tag'
 
-export default class Landing extends Component {
+class Landing extends Component {
   constructor(props) {
     super(props)
 
@@ -44,7 +47,20 @@ export default class Landing extends Component {
           .auth()
           .signInWithCredential(credential)
           .then(user => {
-            this.props.toggleAuth()
+            // Login in with email and uid of the person
+            this.props.login("Testperson@test.com", "Test")
+            .then( data => console.log(data) )
+            .catch(error => {
+              // If no user with that email exists create one
+              if ( error.message.includes("No such user found") ){
+                // All the following four fields are required
+                this.props.signup("Test Person", "testperson@test.com", "1234567890", "Test")
+                .then(data => console.log(data)) // This is where we will need to store the data nd then change state
+                .catch(error => console.error(error))
+              } else {
+                console.error(error)
+              }
+            })
           })
           .catch(error => console.error(error))
       })
@@ -54,10 +70,12 @@ export default class Landing extends Component {
   render() {
     return (
       <Container>
-        <LogoContainer />
-        <AuthButton onClick={this.props.toggleAuth}>
-          <ButtonText>Sign in with Google</ButtonText>
-        </AuthButton>
+          <Fragment>
+            <LogoContainer />
+            <AuthButton onClick={this.handleAuthClick}>
+              <ButtonText>Sign in with Google</ButtonText>
+            </AuthButton>
+          </Fragment>
       </Container>
     )
   }
@@ -106,3 +124,55 @@ const ButtonText = styled.p`
 // const ButtonImage = styled.img`
 //   margin-right: 8px;
 // `
+
+const createLoginMutation =  gql`
+  mutation login($email: String!, $uid: String!) {
+    login(email: $email, uid: $uid) {
+      user {
+        id
+        email
+        phone
+        syncComplete
+      }
+      token
+    }
+  }
+  `
+
+const createSignUpMutation = gql`
+  mutation signup($name: String! $email: String!, $phone: String!, $uid: String!) {
+    signup(name: $name, email: $email, phone: $phone, uid: $uid) {
+      user {
+        id
+        email
+        phone
+        syncComplete
+      }
+      token
+    }
+  }
+  `
+
+const withMutations = compose (
+  graphql(createLoginMutation, {
+    props: ({ ownProps, mutate }) => ({
+      login: (email, uid) => {
+        return mutate({
+          variables: { email: email, uid: uid },
+        })
+      }
+    }),
+  }),
+  graphql(createSignUpMutation, {
+    props: ({ ownProps, mutate }) => ({
+      signup: (name, email, phone, uid) => {
+        return mutate({
+          variables: { name: name, email: email, phone: phone, uid: uid },
+        })
+      }
+    }),
+  }) 
+)
+
+
+export default withApollo(withMutations(Landing))
