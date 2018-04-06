@@ -22,13 +22,13 @@ export default class MessageBar extends Component {
       //13 is the enter keycode
       //Do stuff in here
       if (event.shiftKey) {
-        console.log('SHIFTED')
+        // console.log('SHIFTED')
         const index = event.target.selectionStart
         const messageText =
           this.state.messageText.slice(0, index) +
           '\n' +
           this.state.messageText.slice(index)
-        console.log(messageText)
+        // console.log(messageText)
         this.setState({ messageText })
       } else {
         this.sendMessage()
@@ -46,7 +46,7 @@ export default class MessageBar extends Component {
     const { messageText } = this.state
     return (
       <MessageBarContainer>
-        <AttachButton />
+        <AttachButton>+</AttachButton>
         <MessageInput
           type="text"
           onChange={this.handleTextChange}
@@ -65,6 +65,13 @@ const AttachButton = styled.div`
   border-top-left-radius: 10px;
   flex-grow: 0;
   width: 48px;
+  color: ${({ theme }) => theme.light};
+  text-align: center;
+  line-height: 40px;
+  font-size: 32px;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const MessageInput = styled.input`

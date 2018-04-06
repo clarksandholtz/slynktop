@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import NavBar from './components/nav-bar'
 import MessagesPage from './screens/messages/messages-page'
@@ -13,7 +13,10 @@ export default class RootLayout extends Component {
       <GridContainer>
         <NavBar />
         <PageContainer>
-          <Route path="/messages" component={MessagesPage} />
+          <Switch>
+            <Route path="/messages/:id" component={MessagesPage} />
+            <Route path="/messages" component={MessagesPage} />
+          </Switch>
           {/* <NotificationsPage />
           <FilesPage />
           <SettingsPage /> */}

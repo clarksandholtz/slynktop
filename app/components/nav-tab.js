@@ -11,11 +11,7 @@ export default class NavTab extends Component {
 
   render() {
     const { route } = this.props
-    return (
-      <TabLink to={route}>
-        {route}
-      </TabLink>
-    )
+    return <TabLink to={route}>{route}</TabLink>
   }
 }
 

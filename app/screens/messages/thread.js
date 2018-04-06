@@ -29,7 +29,7 @@ const ThreadContainer = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding: 0 24px;
+  padding: 0 24px 8px 24px;
   flex-shrink: 1;
   flex-grow: 1;
 `
