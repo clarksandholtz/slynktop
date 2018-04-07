@@ -8,7 +8,7 @@ class ConversationsList extends Component {
   renderConversations = () => {
     const { conversations, match } = this.props
     return conversations.map(convo => {
-      return <ConversationsListItem key={convo.contact.name} convo={convo} />
+      return <ConversationsListItem key={convo.id} convo={convo} />
     })
   }
 

@@ -48,19 +48,26 @@ class Landing extends Component {
           .signInWithCredential(credential)
           .then(user => {
             // Login in with email and uid of the person
-            this.props.login("Testperson@test.com", "Test")
-            .then( data => console.log(data) )
-            .catch(error => {
-              // If no user with that email exists create one
-              if ( error.message.includes("No such user found") ){
-                // All the following four fields are required
-                this.props.signup("Test Person", "testperson@test.com", "1234567890", "Test")
-                .then(data => console.log(data)) // This is where we will need to store the data nd then change state
-                .catch(error => console.error(error))
-              } else {
-                console.error(error)
-              }
-            })
+            this.props
+              .login('Testperson@test.com', 'Test')
+              .then(data => console.log(data))
+              .catch(error => {
+                // If no user with that email exists create one
+                if (error.message.includes('No such user found')) {
+                  // All the following four fields are required
+                  this.props
+                    .signup(
+                      'Test Person',
+                      'testperson@test.com',
+                      '1234567890',
+                      'Test',
+                    )
+                    .then(data => console.log(data)) // This is where we will need to store the data nd then change state
+                    .catch(error => console.error(error))
+                } else {
+                  console.error(error)
+                }
+              })
           })
           .catch(error => console.error(error))
       })
@@ -70,12 +77,12 @@ class Landing extends Component {
   render() {
     return (
       <Container>
-          <Fragment>
-            <LogoContainer />
-            <AuthButton onClick={this.handleAuthClick}>
-              <ButtonText>Sign in with Google</ButtonText>
-            </AuthButton>
-          </Fragment>
+        <Fragment>
+          <LogoContainer />
+          <AuthButton onClick={this.props.toggleAuth}>
+            <ButtonText>Sign in with Google</ButtonText>
+          </AuthButton>
+        </Fragment>
       </Container>
     )
   }
@@ -125,7 +132,7 @@ const ButtonText = styled.p`
 //   margin-right: 8px;
 // `
 
-const createLoginMutation =  gql`
+const createLoginMutation = gql`
   mutation login($email: String!, $uid: String!) {
     login(email: $email, uid: $uid) {
       user {
@@ -137,10 +144,15 @@ const createLoginMutation =  gql`
       token
     }
   }
-  `
+`
 
 const createSignUpMutation = gql`
-  mutation signup($name: String! $email: String!, $phone: String!, $uid: String!) {
+  mutation signup(
+    $name: String!
+    $email: String!
+    $phone: String!
+    $uid: String!
+  ) {
     signup(name: $name, email: $email, phone: $phone, uid: $uid) {
       user {
         id
@@ -151,16 +163,16 @@ const createSignUpMutation = gql`
       token
     }
   }
-  `
+`
 
-const withMutations = compose (
+const withMutations = compose(
   graphql(createLoginMutation, {
     props: ({ ownProps, mutate }) => ({
       login: (email, uid) => {
         return mutate({
           variables: { email: email, uid: uid },
         })
-      }
+      },
     }),
   }),
   graphql(createSignUpMutation, {
@@ -169,10 +181,9 @@ const withMutations = compose (
         return mutate({
           variables: { name: name, email: email, phone: phone, uid: uid },
         })
-      }
+      },
     }),
-  }) 
+  }),
 )
-
 
 export default withApollo(withMutations(Landing))

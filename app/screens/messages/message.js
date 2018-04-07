@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 export default class Message extends Component {
   render() {
-    const { message: { content, timestamp, inbound }, isLast } = this.props
+    const { message: { body, timestamp, userSent }, isLast } = this.props
     return (
-      <Wrapper inbound={inbound} isLast={isLast}>
-        <Bubble inbound={inbound}>
-          <MessageText>{content}</MessageText>
+      <Wrapper inbound={!userSent} isLast={isLast}>
+        <Bubble inbound={!userSent}>
+          <MessageText>{body}</MessageText>
         </Bubble>
         {isLast && <TimestampText>{timestamp}</TimestampText>}
       </Wrapper>

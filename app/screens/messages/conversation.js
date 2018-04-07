@@ -7,9 +7,11 @@ import Thread from './Thread'
 class Conversation extends Component {
   render() {
     const { convo } = this.props
+    const { participants } = convo
+    const names = participants.map(p => p.name).join(', ')
     return (
       <Container>
-        <ConversationHeader>{convo.contact.name}</ConversationHeader>
+        <ConversationHeader>{names}</ConversationHeader>
         <Thread convo={convo} />
         <MessageBar />
       </Container>

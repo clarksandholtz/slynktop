@@ -19,7 +19,7 @@ class MessagesPage extends Component {
     let activeConversation
     if (match.params.id) {
       activeConversation = conversations.find(conversation => {
-        return conversation.id == match.params.id
+        return conversation.id === match.params.id
       })
     }
     return (

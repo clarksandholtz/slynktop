@@ -12,7 +12,7 @@ class Thread extends Component {
         message={msg}
         isLast={
           index === messages.length - 1 ||
-          msg.inbound !== messages[index + 1].inbound
+          msg.userSent !== messages[index + 1].userSent
         }
       />
     ))
