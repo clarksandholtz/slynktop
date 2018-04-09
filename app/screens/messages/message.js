@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  max-width: 44%;
 `
 
 const Bubble = styled.div`

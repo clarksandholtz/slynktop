@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Route, withRouter, Switch } from 'react-router-dom'
 import styled from 'styled-components'
+import { graphql, withApollo, compose } from 'react-apollo'
 import ConversationsList from './conversations-list'
 import ConversationPlaceholder from './conversation-placeholder'
 import Conversation from './conversation'
 import conversations from './conversation-data'
+import gql from 'graphql-tag'
 class MessagesPage extends Component {
   constructor(props) {
     super(props)
@@ -14,8 +16,12 @@ class MessagesPage extends Component {
   }
 
   render() {
-    const { match } = this.props
-    const { conversations } = this.state
+    console.log('Proppies!', this.props)
+    const { match, data } = this.props
+    let {conversations} = this.state
+    if (!data.loading) {
+      conversations = data.me.conversations
+    }
     let activeConversation
     if (match.params.id) {
       activeConversation = conversations.find(conversation => {
@@ -45,4 +51,29 @@ const MessagesPageContainer = styled.div`
   background-color: ${({ theme }) => theme.light};
 `
 
-export default withRouter(MessagesPage)
+const meQuery = gql`
+  query me {
+    me {
+      id
+      conversations {
+        id
+        messages {
+          body
+          address
+          date
+          userSent
+        }
+        participants {
+          name
+          phone
+        }
+      }
+    }
+  }
+`
+
+const withMe = graphql(meQuery, {
+  options: props => ({}),
+})
+
+export default withApollo(withMe(withRouter(MessagesPage)))
