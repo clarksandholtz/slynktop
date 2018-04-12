@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 // import Textarea from 'react-textarea-autosize'
+import { graphql, withApollo } from 'react-apollo'
+import gql from 'graphql-tag'
 
-export default class MessageBar extends Component {
+class MessageBar extends Component {
   constructor(props) {
     super(props)
 
@@ -19,6 +21,7 @@ export default class MessageBar extends Component {
   sendMessage = () => {
     const messageText = ''
     this.setState({ messageText })
+    this.props.sendMessage("PHONE NUMBER HERE", messageText)
   }
 
   onKeyDown = event => {
@@ -100,3 +103,25 @@ const MessageBarContainer = styled.div`
   flex-direction: row;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 `
+
+const createSendMessageMutation = gql`
+  mutation sendMessage($address: String!, $body: String!, $file: FileCreateInput) {
+    sendMessage(address: $address, body: $body, file: $file){
+      id
+      body
+      address
+    }
+  }
+`
+
+const withMutations = graphql(createSendMessageMutation, {
+  props: ({ ownProps, mutate }) => ({
+    sendMessage: (address, body, file) => {
+      return mutate({
+        variables: { address: address, body: body, file: file },
+      })
+    }
+  }),
+})
+
+export default withApollo(withMutations(MessageBar))
