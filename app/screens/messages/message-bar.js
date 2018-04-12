@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 // import Textarea from 'react-textarea-autosize'
 
 export default class MessageBar extends Component {
@@ -9,6 +10,10 @@ export default class MessageBar extends Component {
     this.state = {
       messageText: '',
     }
+  }
+
+  static propTypes = {
+    address: PropTypes.string.isRequired,
   }
 
   sendMessage = () => {

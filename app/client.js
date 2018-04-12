@@ -19,7 +19,7 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
     connectionParams: {
-      authToken: token ? token : '',
+      authToken: token ? `Bearer ${token}` : '',
     },
   },
 })

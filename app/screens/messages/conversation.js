@@ -9,11 +9,12 @@ class Conversation extends Component {
     const { convo } = this.props
     const { participants } = convo
     const names = participants.map(p => p.name).join(', ')
+    const address = participants.map(p => p.phone).join(' ')
     return (
       <Container>
         <ConversationHeader>{names}</ConversationHeader>
         <Thread convo={convo} />
-        <MessageBar />
+        <MessageBar address={address} />
       </Container>
     )
   }
