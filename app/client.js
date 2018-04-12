@@ -12,23 +12,25 @@ const httpLink = new HttpLink({
   uri: `http://${IP}:4000`,
 })
 
+const token = localStorage.getItem('token')
+
 const wsLink = new WebSocketLink({
   uri: `ws://${IP}:5000/graphql`,
   options: {
     reconnect: true,
     connectionParams: {
-      authToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjamYwYjNhaXQwMDA2MDEzOXAzd2Ewem50IiwiaWF0IjoxNTIyNzk4NTc5fQ.rReshM3S0NLrmajIShb85qRgyjQGLydcSKKgiDB8oaU', //localStorage.getItem('token') || null,
+      authToken: token ? token : '',
     },
   },
 })
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
+  const token = localStorage.getItem('token')
+
   operation.setContext({
     headers: {
-      authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjamZzcW9zMnEwMDBuMDkxMWZldjFvNmdrIiwiaWF0IjoxNTIzMzEyNDMwfQ.rVIbcjSNj_4vFMltci8XDFgIJPxmXQCV3GS-vSU1d4w', //localStorage.getItem('token') || null,
+      authorization: token ? `Bearer ${token}` : '',
     },
   })
   return forward(operation)

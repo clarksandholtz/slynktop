@@ -18,8 +18,8 @@ class MessagesPage extends Component {
   render() {
     console.log('Proppies!', this.props)
     const { match, data } = this.props
-    let {conversations} = this.state
-    if (!data.loading) {
+    let { conversations } = this.state
+    if (!data.loading && data.me) {
       conversations = data.me.conversations
     }
     let activeConversation
