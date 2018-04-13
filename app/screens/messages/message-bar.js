@@ -21,7 +21,8 @@ class MessageBar extends Component {
   sendMessage = () => {
     const messageText = ''
     this.setState({ messageText })
-    this.props.sendMessage("PHONE NUMBER HERE", messageText)
+    const { sendMessage: send, address } = this.props
+    send(address, messageText)
   }
 
   onKeyDown = event => {
@@ -105,8 +106,12 @@ const MessageBarContainer = styled.div`
 `
 
 const createSendMessageMutation = gql`
-  mutation sendMessage($address: String!, $body: String!, $file: FileCreateInput) {
-    sendMessage(address: $address, body: $body, file: $file){
+  mutation sendMessage(
+    $address: String!
+    $body: String!
+    $file: FileCreateInput
+  ) {
+    sendMessage(address: $address, body: $body, file: $file) {
       id
       body
       address
@@ -120,7 +125,7 @@ const withMutations = graphql(createSendMessageMutation, {
       return mutate({
         variables: { address: address, body: body, file: file },
       })
-    }
+    },
   }),
 })
 

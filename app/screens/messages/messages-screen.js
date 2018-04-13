@@ -7,7 +7,7 @@ import ConversationPlaceholder from './conversation-placeholder'
 import Conversation from './conversation'
 import conversations from './conversation-data'
 import gql from 'graphql-tag'
-class MessagesPage extends Component {
+class MessagesScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -16,9 +16,9 @@ class MessagesPage extends Component {
   }
 
   render() {
-    console.log('Proppies!', this.props)
     const { match, data } = this.props
     let { conversations } = this.state
+    console.log(data)
     if (!data.loading && data.me) {
       conversations = data.me.conversations
     }
@@ -72,8 +72,31 @@ const meQuery = gql`
   }
 `
 
+// const createNewMessageSubscription = gql`
+//   subscription newMessage($token: String!){
+//     subscription newMessage(token: $token){
+//      userSent
+//       androidMsgId
+//       id
+//       address
+//       sender
+//       read
+//       body
+//       threadId
+//       error
+//       date
+//       files {
+//         id
+//         contentType
+//         content
+//         uploaded
+//       }
+//     }
+//   }
+//   `
+
 const withMe = graphql(meQuery, {
   options: props => ({}),
 })
 
-export default withApollo(withMe(withRouter(MessagesPage)))
+export default withApollo(withMe(withRouter(MessagesScreen)))

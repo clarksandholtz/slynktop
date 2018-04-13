@@ -9,7 +9,6 @@ class ConversationListItem extends Component {
     const { messages, participants } = convo
     const msg = messages[0]
     const names = participants.map(p => p.name).join(', ')
-    console.log(convo)
     return (
       <ConvoListItem key={convo.id} to={`/messages/${convo.id}`}>
         <ContactName>{names}</ContactName>
