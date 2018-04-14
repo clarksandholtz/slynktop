@@ -26,15 +26,17 @@ class Landing extends Component {
     const { login, toggleAuth } = this.props
     const { email, uid, displayName: fullName } = googleUser
     console.log('UID!!!!', uid)
+    let loginSuccessful = true
     const res = await login(email, uid).catch(err => {
       console.error(err.message)
+      loginSuccessful = false
       if (err.message.includes('No such user found for email')) {
         this.setState({ createAccount: true, email, uid, fullName })
       } else {
         alert('Oops! Something went wrong logging you in!')
       }
     })
-    if (this.state.createAccount) return
+    if (!loginSuccessful) return
     if (res.data && res.data.login && res.data.login.token) {
       localStorage.setItem(KEY_TOKEN, res.data.login.token)
       toggleAuth()
@@ -214,7 +216,7 @@ const AuthButton = styled.div`
   border-radius: 32px;
   height: 32px;
   background-color: ${props => props.theme.light};
-  color: ${props => props.theme.dark}
+  color: ${props => props.theme.dark};
   align-self: center;
   justify-self: center;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.18);

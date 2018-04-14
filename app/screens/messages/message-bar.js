@@ -19,10 +19,10 @@ class MessageBar extends Component {
   }
 
   sendMessage = () => {
+    const { sendMessage: send, address } = this.props
+    send(address, this.state.messageText)
     const messageText = ''
     this.setState({ messageText })
-    const { sendMessage: send, address } = this.props
-    send(address, messageText)
   }
 
   onKeyDown = event => {

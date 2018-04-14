@@ -7,6 +7,8 @@ import rootReducer from '../reducers'
 import * as counterActions from '../actions/counter'
 import * as themerActions from '../actions/themer'
 import type { counterStateType } from '../reducers/counter'
+import storage from 'redux-persist/lib/storage'
+import { persistReducer } from 'redux-persist'
 
 const history = createHashHistory()
 
@@ -53,8 +55,15 @@ const configureStore = (initialState?: counterStateType) => {
   enhancers.push(applyMiddleware(...middleware))
   const enhancer = composeEnhancers(...enhancers)
 
+  const persistConfig = {
+    key: 'root',
+    storage,
+  }
+
+  const persistedReducer = persistReducer(persistConfig, rootReducer)
+
   // Create Store
-  const store = createStore(rootReducer, initialState, enhancer)
+  const store = createStore(persistedReducer, initialState, enhancer)
 
   if (module.hot) {
     module.hot.accept('../reducers', () =>

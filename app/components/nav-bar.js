@@ -40,7 +40,7 @@ export default class NavBar extends Component {
             height="34"
             viewBox="0 0 50 34"
           >
-            <g fill="#73BA9B" fillRule="evenodd">
+            <g fill="currentColor" fillRule="evenodd">
               <rect width="18" height="2" y="32" rx="1" />
               <rect width="18" height="2" y="28" rx="1" />
               <rect width="18" height="2" y="24" rx="1" />
@@ -134,6 +134,7 @@ const NavContainer = styled.div`
 `
 
 const LogoContainer = styled.div`
+  color: ${({ theme }) => theme.primary};
   width: 68px;
   height: 68px;
   display: flex;

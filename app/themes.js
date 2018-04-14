@@ -8,10 +8,10 @@ const themes = {
     light: '#FFFFFF',
   },
   'Purple Sunrise': {
-    primary: '#9A7197',
+    primary: '#BC93B9',
     dark: '#7C5869',
     medium: '#9D96B8',
-    light: '#AFD2E9',
+    light: '#FFF',
   },
 }
 

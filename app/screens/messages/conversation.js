@@ -7,6 +7,7 @@ import Thread from './Thread'
 class Conversation extends Component {
   render() {
     const { convo } = this.props
+    if (!convo) return null
     const { participants } = convo
     const names = participants.map(p => p.name).join(', ')
     const address = participants.map(p => p.phone).join(' ')

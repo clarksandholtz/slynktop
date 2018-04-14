@@ -7,7 +7,7 @@ import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 import { KEY_TOKEN } from './modules/auth'
 
-const IP = 'localhost'
+const IP = '192.168.1.212'
 
 const httpLink = new HttpLink({
   uri: `http://${IP}:4000`,
@@ -31,6 +31,8 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
       authorization: token ? `Bearer ${token}` : '',
+      'Cache-Control': 'no-cache',
+      timestamp: new Date().toISOString(),
     },
   })
   return forward(operation)
