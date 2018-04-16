@@ -5,6 +5,7 @@ import { compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import googleSignIn, { KEY_TOKEN } from '../../modules/auth'
 import googleImg from '../../assets/img/Bitmap.png'
+import logo from '../../assets/img/logo.png'
 
 class Landing extends Component {
   constructor(props) {

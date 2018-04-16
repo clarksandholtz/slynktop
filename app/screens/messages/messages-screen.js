@@ -16,7 +16,10 @@ class MessagesScreen extends Component {
       conversations,
     }
 
+    this.initialSync = true
+    this.conversationLengths = {}
     this.subscription = null
+    this.conversationPoller = null
   }
 
   fetchConversations = async () => {
@@ -30,8 +33,47 @@ class MessagesScreen extends Component {
     }
   }
 
+  checkForNewMessages = async newConversations => {
+    if (this.initialSync) {
+      this.initialSync = false
+      for (const { id, messages } of newConversations) {
+        this.conversationLengths[id] = []
+        for (const msg of messages) {
+          this.conversationLengths[id].push(msg.id)
+        }
+      }
+    } else {
+      const newMessages = []
+      for (const { id, messages, participants } of newConversations) {
+        this.conversationLengths[id] = []
+        for (let msg of messages) {
+          if (!this.conversationLengths[id].includes(msg.id)) {
+            this.conversationLengths[id].push(msg.id)
+            msg.sender = participants[0].name
+            msg.conversationId = id
+            newMessages.push(msg)
+          }
+        }
+      }
+
+      for (const msg of newMessages) {
+        if (msg.userSent) continue // only notify about messages you didn't send
+        const messageNotification = new Notification(
+          `New message from ${msg.sender}`,
+          {
+            body: msg.body,
+            data: msg.conversationId,
+          },
+        )
+
+        messageNotification.onclick = () => {
+          this.props.history.push(`/messages/${msg.conversationId}`)
+        }
+      }
+    }
+  }
+
   startMessagesSub = async () => {
-    console.log('PROPPIES!!!', this.props)
     const { client } = this.props
     const token = localStorage.getItem(KEY_TOKEN)
     this.subscription = await client
@@ -41,14 +83,26 @@ class MessagesScreen extends Component {
           console.log('SUBDUB: ', data)
         },
         error(err) {
-          console.table({ hello: 'yup' })
-          console.log(Object.keys(err))
           console.error(err)
         },
       })
   }
 
   async componentDidMount() {
+    Notification.requestPermission(function(permission) {
+      // If the user accepts, let's create a notification
+      if (permission === 'granted') {
+        let testNotification = new Notification('Test', {
+          body: 'This is a test',
+          data: 'Number',
+        })
+        testNotification.onclick = () => {
+          console.log(testNotification)
+        }
+      }
+    })
+
+    this.conversationPoller = setInterval(this.fetchConversations, 5000)
     this.fetchConversations()
     this.startMessagesSub()
   }
@@ -58,6 +112,11 @@ class MessagesScreen extends Component {
       this.subscription.unsubscribe()
     }
     this.subscription = null
+
+    if (this.interval != null) {
+      clearInterval(this.interval)
+    }
+    this.interval = null
   }
 
   addMessageToConversation = () => {

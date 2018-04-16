@@ -7,7 +7,7 @@ import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 import { KEY_TOKEN } from './modules/auth'
 
-const IP = '192.168.1.212'
+const IP = 'localhost'
 
 const httpLink = new HttpLink({
   uri: `http://${IP}:4000`,
