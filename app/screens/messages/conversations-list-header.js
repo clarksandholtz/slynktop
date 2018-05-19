@@ -3,10 +3,23 @@ import styled from 'styled-components'
 import { transparentize } from 'polished'
 
 export default class ConversationListHeader extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      text: ''
+    }
+  }
+
+  onChange = (event) => {
+    this.setState({text: event.target.value})
+    this.props.onSearchTextChange(event.target.value)
+  }
+
   render() {
     return (
       <Container>
-        <SearchBar type="text" placeholder="Search" />
+        <SearchBar type="text" value={this.state.text} onChange={this.onChange.bind(this)} placeholder="Search" />
         <NewMessageButton>+</NewMessageButton>
       </Container>
     )

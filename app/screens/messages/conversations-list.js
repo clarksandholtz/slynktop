@@ -3,10 +3,38 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import ConversationsListItem from './conversation-list-item'
 import ConversationListhHeader from './conversations-list-header'
+var _ = require('lodash');
 
 class ConversationsList extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchText: '' 
+    }
+  }
+
+  updateSearch = (searchText) => {
+    this.setState({searchText: searchText.toLowerCase()})
+  }
+
   renderConversations = () => {
-    const { conversations, match } = this.props
+    let { conversations, match } = this.props
+    
+    conversations = conversations.filter((convo) => {
+      const messages = convo.messages.filter((message) => {
+        return message.body.toLowerCase().includes(this.state.searchText)
+      })
+      const participants = convo.participants.filter((participant) => {
+        return participant.name.toLowerCase().includes(this.state.searchText)
+      })
+      if (messages.length > 0 || participants.length > 0){
+        return true
+      } else {
+        return false
+      }
+    })
+    
     return conversations.map(convo => {
       return <ConversationsListItem key={convo.id} convo={convo} />
     })
@@ -15,7 +43,7 @@ class ConversationsList extends Component {
   render() {
     return (
       <Container>
-        <ConversationListhHeader />
+        <ConversationListhHeader onSearchTextChange={this.updateSearch}/>
         <ListContainer>{this.renderConversations()}</ListContainer>
       </Container>
     )

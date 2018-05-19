@@ -5,7 +5,6 @@ import { graphql, withApollo, compose } from 'react-apollo'
 import ConversationsList from './conversations-list'
 import ConversationPlaceholder from './conversation-placeholder'
 import Conversation from './conversation'
-import conversations from './conversation-data'
 import gql from 'graphql-tag'
 import { KEY_TOKEN } from '../../modules/auth'
 
@@ -13,7 +12,7 @@ class MessagesScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      conversations,
+      conversations: [],
     }
 
     this.initialSync = true
@@ -24,52 +23,13 @@ class MessagesScreen extends Component {
 
   fetchConversations = async () => {
     const { client } = this.props
-    const { data } = await client.query({ query: meQuery })
-    if (data && data.me && data.me.conversations) {
-      this.setState({ conversations: data.me.conversations })
+    const { data } = await client.query({ query: allConversationsQuery })
+    if (data && data.allConversations) {
+      console.log(JSON.stringify(data.allConversations))
+      this.setState({ conversations: data.allConversations })
     } else {
       console.error(data)
       alert('Oops, syncing went a lil funky!')
-    }
-  }
-
-  checkForNewMessages = async newConversations => {
-    if (this.initialSync) {
-      this.initialSync = false
-      for (const { id, messages } of newConversations) {
-        this.conversationLengths[id] = []
-        for (const msg of messages) {
-          this.conversationLengths[id].push(msg.id)
-        }
-      }
-    } else {
-      const newMessages = []
-      for (const { id, messages, participants } of newConversations) {
-        this.conversationLengths[id] = []
-        for (let msg of messages) {
-          if (!this.conversationLengths[id].includes(msg.id)) {
-            this.conversationLengths[id].push(msg.id)
-            msg.sender = participants[0].name
-            msg.conversationId = id
-            newMessages.push(msg)
-          }
-        }
-      }
-
-      for (const msg of newMessages) {
-        if (msg.userSent) continue // only notify about messages you didn't send
-        const messageNotification = new Notification(
-          `New message from ${msg.sender}`,
-          {
-            body: msg.body,
-            data: msg.conversationId,
-          },
-        )
-
-        messageNotification.onclick = () => {
-          this.props.history.push(`/messages/${msg.conversationId}`)
-        }
-      }
     }
   }
 
@@ -102,9 +62,8 @@ class MessagesScreen extends Component {
       }
     })
 
-    this.conversationPoller = setInterval(this.fetchConversations, 5000)
     this.fetchConversations()
-    this.startMessagesSub()
+    //this.startMessagesSub()
   }
 
   componentWillUnmount() {
@@ -155,22 +114,24 @@ const MessagesPageContainer = styled.div`
   background-color: ${({ theme }) => theme.light};
 `
 
-const meQuery = gql`
-  query me {
-    me {
+const allConversationsQuery = gql`
+  query allConversations {
+    allConversations {
       id
-      conversations {
-        id
-        messages {
-          body
-          address
-          date
-          userSent
+      messages {
+        body
+        address
+        date
+        userSent
+        files {
+          contentType
+          content
+          uploaded
         }
-        participants {
-          name
-          phone
-        }
+      }
+      participants {
+        name
+        phone
       }
     }
   }
