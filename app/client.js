@@ -7,18 +7,19 @@ import { split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 import { KEY_TOKEN } from './modules/auth'
 
-const IP = 'localhost'
+const IP = '192.168.2.21'
 
 const httpLink = new HttpLink({
   uri: `http://${IP}:4000`,
 })
 
 const wsLink = new WebSocketLink({
-  uri: `ws://${IP}:5000/graphql`,
+  uri: `ws://${IP}:4000`,
   options: {
     reconnect: true,
+    timeout: 30000,
     connectionParams: {
-      // authToken: token ? `Bearer ${token}` : '',
+      //authToken: token ? `Bearer ${token}` : '',
     },
   },
 })

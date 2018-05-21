@@ -7,6 +7,7 @@ import ConversationPlaceholder from './conversation-placeholder'
 import Conversation from './conversation'
 import gql from 'graphql-tag'
 import { KEY_TOKEN } from '../../modules/auth'
+var _ = require('lodash')
 
 class MessagesScreen extends Component {
   constructor(props) {
@@ -21,11 +22,24 @@ class MessagesScreen extends Component {
     this.conversationPoller = null
   }
 
+  addMessageToConversation = (newMessage) => {
+    this.setState({conversations: this.state.conversations.find((convo)=>convo.threadId === newMessage.threadId).push(newMessage)})
+    if (!newMessage.userSend) {
+      const from = _.pluck(this.state.conversations, 'name').join(", ")
+      let notification = new Notification(from, {
+        body: newMessage.body,
+        data: newMessage.sender,
+      })
+      notification.onclick = () => {
+        //Go to conversation
+      } 
+    }
+  }
+
   fetchConversations = async () => {
     const { client } = this.props
     const { data } = await client.query({ query: allConversationsQuery })
     if (data && data.allConversations) {
-      console.log(JSON.stringify(data.allConversations))
       this.setState({ conversations: data.allConversations })
     } else {
       console.error(data)
@@ -36,34 +50,26 @@ class MessagesScreen extends Component {
   startMessagesSub = async () => {
     const { client } = this.props
     const token = localStorage.getItem(KEY_TOKEN)
-    this.subscription = await client
-      .subscribe({ query: createNewMessageSubscription, variables: { token } })
-      .subscribe({
-        next(data) {
-          console.log('SUBDUB: ', data)
-        },
-        error(err) {
-          console.error(err)
-        },
-      })
+    this.subscription = await client.subscribe({  query: createNewMessageSubscription, variables: { token } })
+    this.subscription.subscribe({
+      next(res) {
+        const { newMessage } = res.data
+        this.newMessage(newMessage) 
+      },
+      error(err) {
+        console.error(err)
+      },
+    })
   }
 
   async componentDidMount() {
     Notification.requestPermission(function(permission) {
-      // If the user accepts, let's create a notification
-      if (permission === 'granted') {
-        let testNotification = new Notification('Test', {
-          body: 'This is a test',
-          data: 'Number',
-        })
-        testNotification.onclick = () => {
-          console.log(testNotification)
-        }
+      if (permission !== 'granted') {
+        console.log("Error getting permissions for notification access")
       }
     })
-
     this.fetchConversations()
-    //this.startMessagesSub()
+    this.startMessagesSub()
   }
 
   componentWillUnmount() {
@@ -76,10 +82,6 @@ class MessagesScreen extends Component {
       clearInterval(this.interval)
     }
     this.interval = null
-  }
-
-  addMessageToConversation = () => {
-    // const correctConversation =
   }
 
   render() {
@@ -118,6 +120,7 @@ const allConversationsQuery = gql`
   query allConversations {
     allConversations {
       id
+      threadId
       messages {
         body
         address
@@ -138,8 +141,7 @@ const allConversationsQuery = gql`
 `
 
 const createNewMessageSubscription = gql`
-  query newMessage($token: String!) {
-    subscription
+  subscription newMessage($token: String!) {
     newMessage(token: $token) {
       userSent
       androidMsgId

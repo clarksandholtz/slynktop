@@ -3,8 +3,6 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import ConversationsListItem from './conversation-list-item'
 import ConversationListhHeader from './conversations-list-header'
-var _ = require('lodash');
-
 class ConversationsList extends Component {
 
   constructor(props) {
