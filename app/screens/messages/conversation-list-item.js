@@ -6,13 +6,14 @@ import { darken } from 'polished'
 class ConversationListItem extends Component {
   render() {
     const { convo, match } = this.props
-    const { messages } = convo
+    const { messages, participants } = convo
     const msg = messages[0]
+    const names = participants.map(p => p.name).join(', ')
     return (
-      <ConvoListItem key={convo.contact.name} to={`/messages/${convo.id}`}>
-        <ContactName>{convo.contact.name}</ContactName>
+      <ConvoListItem key={convo.id} to={`/messages/${convo.id}`}>
+        <ContactName>{names}</ContactName>
         <TimeStamp>{msg.timestamp}</TimeStamp>
-        <MessagePreview unread={msg.read}>{msg.content}</MessagePreview>
+        <MessagePreview unread={msg.read}>{msg.body}</MessagePreview>
       </ConvoListItem>
     )
   }

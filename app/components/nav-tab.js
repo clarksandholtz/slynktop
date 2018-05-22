@@ -10,8 +10,12 @@ export default class NavTab extends Component {
   }
 
   render() {
-    const { route } = this.props
-    return <TabLink to={route}>{route}</TabLink>
+    const { route, icon: iconName } = this.props
+    return (
+      <TabLink to={route}>
+        <i className="material-icons">{iconName}</i>
+      </TabLink>
+    )
   }
 }
 
@@ -25,5 +29,9 @@ const TabLink = styled(NavLink)`
   color: ${({ theme }) => theme.light};
   &[aria-current='true'] {
     background-color: ${({ theme }) => theme.primary};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.primary};
+    }
   }
 `

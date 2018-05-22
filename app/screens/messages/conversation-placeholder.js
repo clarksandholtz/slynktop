@@ -3,10 +3,10 @@ import styled from 'styled-components'
 
 export default class ConversationPlaceholder extends Component {
   render() {
-    return <PlaceholderMessage>CLICK A CONVERSATION</PlaceholderMessage>
+    return <PlaceholderMessage>CLICK A CONVERSATION!</PlaceholderMessage>
   }
 }
 
 const PlaceholderMessage = styled.div`
-  color: black;
+  color: ${({ theme }) => theme.dark};
 `
